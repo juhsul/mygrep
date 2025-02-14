@@ -1,2 +1,4 @@
+.vscode
 build/
 docs/
+man_grep_plain_ASCII.txt

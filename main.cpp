@@ -26,38 +26,44 @@
 // ▐▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▌
 
 #include <iostream>
+#include <vector>
+#include <fcntl.h> // Unicode tulostuksen pakotukseen
 
 #include "search.h"
+#include "wide_exception.h"
+#include "convert_wide.h"
 
 using namespace std;
 
 int main(int argc, char *argv[])
 {
-
-    wstring haystack; // Merkkijono josta etsitään
-    wstring needle;   // Merkkijono jota etsitään
-
-    // Jos ohjelma käynnistetään ilman komentoriviargumentteja
-    if (argc == 1)
+    try
     {
-        wcout << L"Give a string from which to search for: ";
-        getline(wcin, haystack);
-        wcout << L"Give search string: ";
-        getline(wcin, needle);
+        // Käyttää järjestelmän nykyistä kieli ja merkistöasetusta.
+        setlocale(LC_ALL, "");
+        _setmode(_fileno(stdout), _O_U16TEXT); // Pakottaa Unicode-tulostuksen
+        _setmode(_fileno(stdin), _O_U16TEXT);  // Pakottaa Unicode-inputin
 
-        int found_index = find_substr(haystack, needle);
+        vector<wstring> wargv; // Vektori komentoriviargumenttien leveille merkkijonoille.
+        // Komentoriviargumenttien muuttaminen leveiksi merkkijonoiksi.
+        for (int i = 0; i < argc; i++)
+        {
+            wargv.push_back(convert_to_wstr(argv[i]));
+        }
 
-        // Jos löytyy
-        if (found_index >= 0)
+        // Jos ohjelma käynnistetään ilman komentoriviargumentteja
+        if (argc == 1)
         {
-            wcout << "\"" << needle << "\" found in \"" << haystack
-                  << "\" in position " << found_index << endl;
+            grep_basic();
         }
-        // Jos ei löydy
-        else
+        else if (argc == 3)
         {
-            wcout << "\"" << needle << "\" NOT found in \"" << haystack << "\"\n";
+            grep_arg(wargv[1], wargv[2]);
         }
+    }
+    catch (const WruntimeError &e)
+    {
+        wcerr << L"An exception occurred. " << e.wwhat() << L"\n";
     }
 
     return 0;
