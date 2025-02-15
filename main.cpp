@@ -25,20 +25,24 @@
 // ▐                             ▌
 // ▐▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▌
 
-#include <iostream>
 #include <vector>
+#include <cstdlib>
 
 #include "search.h"
+#include "input_output.h"
 
-using namespace std;
+using std::string;
+using std::vector;
 
 int main(int argc, char *argv[])
 {
+// Windowsissa muuntaa komentoriviargumentit UTF-8-muotoon
+#ifdef _WIN32
+    io::args _(argc, argv);
+#endif
+
     try
     {
-        // Asetetaan kieli ja merkistöasetukset suomenkielisiksi
-        setlocale(LC_ALL, "fi_FI.UTF-8");
-
         // Jos ohjelma käynnistetään ilman komentoriviargumentteja
         if (argc == 1)
         {
@@ -49,9 +53,9 @@ int main(int argc, char *argv[])
             grep_arg(argv[1], argv[2]);
         }
     }
-    catch (const runtime_error &e)
+    catch (const std::runtime_error &e)
     {
-        cerr << "An exception occurred. " << e.what() << "\n";
+        io::cerr << "An exception occurred. " << e.what() << "\n";
     }
 
     return 0;

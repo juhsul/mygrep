@@ -4,9 +4,19 @@ Tampereen ammattikorkeakoulussa _Ohjelmoinnin edistyneet piirteet_ -kurssilla su
 
 <br>
 
-## Kääntäminen **CMaken** ja **Ninjan** avulla
+## Asennusohjeet
 
 Tämä projekti käyttää **CMakea** ja **Ninjaa** ohjelman kääntämiseen. Kääntäminen onnistuu myös ilman Ninjaa.
+
+Windowsilla tarvitset lisäksi myös **Boost.Nowide**-kirjaston, koska Windowsin komentorivi ja oletusstandardikirjasto eivät käsittele UTF-8-merkistöä kunnolla, joten ääkköset eivät toimi. Tämä johtuu siitä, että Windows käyttää oletuksena UTF-16-merkistöä, kun taas Linux ja macOS käyttävät UTF-8:a. Boost.Nowide muuntaa syötteet ja tulosteet automaattisesti UTF-8-muotoon, jotta ohjelma toimii yhtenäisesti eri käyttöjärjestelmissä.
+
+**Boost.Nowide**-kirjasto sisältyy **Boost**-kirjastokokoelmaan. Boost-kirjasto on lisensoitu **Boost Software License 1.0** -ehdoin. Lisätietoja: <https://www.boost.org/LICENSE_1_0.txt>
+
+### Boost-kirjaston asentaminen (vain Windows)
+
+```sh
+pacman -S mingw-w64-ucrt-x86_64-boost # MSYS2/MinGW
+```
 
 ### Kääntäminen Ninjan kanssa
 

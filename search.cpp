@@ -1,15 +1,16 @@
 #include "search.h"
 
-#include <fstream>
-#include <iostream>
+#include <stdexcept>
+
+#include "input_output.h"
 
 vector<string> read_textfile(const string &filename)
 {
-    ifstream file(filename.c_str());
+    io::ifstream file(filename.c_str());
 
     // Jos tiedostoa ei saada avattua, heitetään poikkeus
     if (!file)
-        throw runtime_error("Could not open file \"" + filename + "\"");
+        throw std::runtime_error("Could not open file \"" + filename + "\"");
 
     vector<string> lines;
     string line;
@@ -36,7 +37,7 @@ void grep_arg(const string &needle, const string &filename)
     {
         if (find_substr(line, needle) >= 0)
         {
-            cout << line << "\n";
+            io::cout << line << "\n";
         }
     }
 
@@ -48,21 +49,21 @@ void grep_basic()
     string haystack; // Merkkijono josta etsitään
     string needle;   // Merkkijono jota etsitään
 
-    cout << "Give a string from which to search for: ";
-    getline(cin, haystack);
-    cout << "Give search string: ";
-    getline(cin, needle);
+    io::cout << "Give a string from which to search for: ";
+    getline(io::cin, haystack);
+    io::cout << "Give search string: ";
+    getline(io::cin, needle);
 
     int found_index = find_substr(haystack, needle);
 
     // Jos löytyy
     if (found_index >= 0)
-        cout << "\"" << needle << "\" found in \"" << haystack
-             << "\" in position " << found_index << "\n";
+        io::cout << "\"" << needle << "\" found in \"" << haystack
+                 << "\" in position " << found_index << "\n";
 
     // Jos ei löydy
     else
-        cout << "\"" << needle << "\" NOT found in \"" << haystack << "\"\n";
+        io::cout << "\"" << needle << "\" NOT found in \"" << haystack << "\"\n";
 
     return;
 }
