@@ -5,4 +5,4 @@ project(mygrep LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-add_executable(mygrep main.cpp search.cpp wide_exception.cpp convert_wide.cpp)
+add_executable(mygrep main.cpp search.cpp)

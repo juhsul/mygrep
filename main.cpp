@@ -27,11 +27,8 @@
 
 #include <iostream>
 #include <vector>
-#include <fcntl.h> // Unicode tulostuksen pakotukseen
 
 #include "search.h"
-#include "wide_exception.h"
-#include "convert_wide.h"
 
 using namespace std;
 
@@ -39,17 +36,8 @@ int main(int argc, char *argv[])
 {
     try
     {
-        // Käyttää järjestelmän nykyistä kieli ja merkistöasetusta.
-        setlocale(LC_ALL, "");
-        _setmode(_fileno(stdout), _O_U16TEXT); // Pakottaa Unicode-tulostuksen
-        _setmode(_fileno(stdin), _O_U16TEXT);  // Pakottaa Unicode-inputin
-
-        vector<wstring> wargv; // Vektori komentoriviargumenttien leveille merkkijonoille.
-        // Komentoriviargumenttien muuttaminen leveiksi merkkijonoiksi.
-        for (int i = 0; i < argc; i++)
-        {
-            wargv.push_back(convert_to_wstr(argv[i]));
-        }
+        // Asetetaan kieli ja merkistöasetukset suomenkielisiksi
+        setlocale(LC_ALL, "fi_FI.UTF-8");
 
         // Jos ohjelma käynnistetään ilman komentoriviargumentteja
         if (argc == 1)
@@ -58,12 +46,12 @@ int main(int argc, char *argv[])
         }
         else if (argc == 3)
         {
-            grep_arg(wargv[1], wargv[2]);
+            grep_arg(argv[1], argv[2]);
         }
     }
-    catch (const WruntimeError &e)
+    catch (const runtime_error &e)
     {
-        wcerr << L"An exception occurred. " << e.wwhat() << L"\n";
+        cerr << "An exception occurred. " << e.what() << "\n";
     }
 
     return 0;

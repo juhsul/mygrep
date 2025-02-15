@@ -11,7 +11,7 @@ using namespace std;
  * @param filename Luettavan tiedoston tiedostonimi.
  * @return vector<string> Luettu tekstitiedosto. Jokainen rivi omalla indeksillään.
  */
-vector<wstring> read_textfile(const wstring &filename);
+vector<string> read_textfile(const string &filename);
 
 /**
  * @brief Etsii riviltä annettua merkkijonoa.
@@ -20,7 +20,7 @@ vector<wstring> read_textfile(const wstring &filename);
  * @param needle Merkkijono jota haetaan.
  * @return int Indeksi josta merkkijono löydettiin. -1 jos ei löydy.
  */
-int find_substr(const wstring &haystack, const wstring &needle);
+int find_substr(const string &haystack, const string &needle);
 
 /**
  * @brief Tulostaa löydetyt rivit annettujen tietojen avulla.
@@ -28,7 +28,7 @@ int find_substr(const wstring &haystack, const wstring &needle);
  * @param needle Etsittävä merkkijono.
  * @param filename Tiedoston nimi, josta etsitään.
  */
-void grep_arg(const wstring &needle, const wstring &filename);
+void grep_arg(const string &needle, const string &filename);
 
 /**
  * @brief Kysyy käyttäjältä merkkijonoa, jota etsitään, sekä merkkijonoa, mistä etsitään.
