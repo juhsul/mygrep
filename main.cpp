@@ -25,14 +25,10 @@
 // ▐                             ▌
 // ▐▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▌
 
-#include <vector>
 #include <cstdlib>
 
 #include "search.h"
 #include "input_output.h"
-
-using std::string;
-using std::vector;
 
 int main(int argc, char *argv[])
 {
@@ -48,9 +44,9 @@ int main(int argc, char *argv[])
         {
             grep_basic();
         }
-        else if (argc == 3)
+        else
         {
-            grep_arg(argv[1], argv[2]);
+            grep_arg(argc, argv);
         }
     }
     catch (const std::runtime_error &e)

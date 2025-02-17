@@ -1,8 +1,16 @@
 #include "search.h"
 
 #include <stdexcept>
+#include <unordered_map>
+#include <string_view>
+#include <unordered_set>
 
 #include "input_output.h"
+#include "constants.h"
+
+using std::string_view;
+using std::unordered_map;
+using std::unordered_set;
 
 vector<string> read_textfile(const string &filename)
 {
@@ -29,16 +37,78 @@ int find_substr(const string &haystack, const string &needle)
     return (pos == string::npos) ? -1 : static_cast<int>(pos);
 }
 
-void grep_arg(const string &needle, const string &filename)
+void grep_arg(const int &argc, const char *const argv[])
 {
+    // Aliohjelma toimii vain jos komentoriviargumentteja on 2 tai 3 ohjelmakutsun jälkeen
+    if (argc <= 2 || argc >= 5)
+        throw std::runtime_error("Unknown number of arguments!");
+
+    unordered_set<char> options; // Käyttäjän syöttämät optiot
+
+    // Virhetarkastelut optioille
+    if (argc == 4)
+    {
+        // Option tarkastaminen
+        if (argv[1][0] != '-' || argv[1][1] != 'o')
+            throw std::runtime_error("Unknown option!");
+
+        if (strlen(argv[1]) == 2)
+            throw std::runtime_error("No options after -o!");
+
+        // Liikaa optioita -o jälkeen
+        if (strlen(argv[1]) > OPTIONS.size() + 2)
+            throw std::runtime_error("Option list too long after -o!");
+
+        unordered_map<char, int> option_tag_count;
+        // Merkkijononäkymä std::string_view mahdollistaa char*-tyyppisen merkkijonon
+        // käsittelyn kuten std::string, mutta ilman ylimääräistä kopiointia tai muistiallokointia.
+        // Sisältää vain optiot -o jälkeen.
+        string_view option_tag_str(argv[1] + 2);
+
+        for (char c : option_tag_str)
+        {
+            // Jos -o jälkeen on muita kuin sallittuja optiomerkkejä.
+            if (OPTIONS.find(c) == OPTIONS.end())
+                throw std::runtime_error("Contains illegal options after -o!");
+
+            // Jos sama on useamman kerran.
+            if (++option_tag_count[c] > 1)
+                throw std::runtime_error("Same option multiple times after -o!");
+        }
+
+        // Lisätään käyttäjän syöttämät optiot settiin helpompaa käsittelyä varten.
+        for (int i = 0; i < option_tag_str.length(); i++)
+        {
+            options.insert(option_tag_str[i]);
+        }
+    }
+
+    // Optiot
+    bool line_numbering = options.find('l') != options.end();
+    bool occurrences = options.find('o') != options.end();
+
+    string filename = argv[argc == 3 ? 2 : 3];
+    string needle = argv[argc == 3 ? 1 : 2];
     vector<string> haystack = read_textfile(filename);
 
-    for (string line : haystack)
+    int lines_found = 0;
+
+    // Käydään joka rivi läpi tiedostosta.
+    for (int i = 0; i < haystack.size(); i++)
     {
-        if (find_substr(line, needle) >= 0)
+        if (find_substr(haystack[i], needle) >= 0)
         {
-            io::cout << line << "\n";
+            lines_found++;
+            if (line_numbering)
+            {
+                io::cout << i + 1 << ":";
+            }
+            io::cout << haystack[i] << "\n";
         }
+    }
+    if (occurrences)
+    {
+        io::cout << "\nOccurrences of lines containing \"" << needle << "\": " << lines_found;
     }
 
     return;

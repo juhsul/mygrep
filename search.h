@@ -26,10 +26,10 @@ int find_substr(const string &haystack, const string &needle);
 /**
  * @brief Tulostaa löydetyt rivit annettujen tietojen avulla.
  *
- * @param needle Etsittävä merkkijono.
- * @param filename Tiedoston nimi, josta etsitään.
+ * @param argc Komentoriviargumenttien määrä.
+ * @param argv Komentoriviargumenttien taulukko.
  */
-void grep_arg(const string &needle, const string &filename);
+void grep_arg(const int &argc, const char *const argv[]);
 
 /**
  * @brief Kysyy käyttäjältä merkkijonoa, jota etsitään, sekä merkkijonoa, mistä etsitään.
