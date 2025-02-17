@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <string_view>
 #include <unordered_set>
+#include <cctype> // tolower
 
 #include "input_output.h"
 #include "constants.h"
@@ -35,6 +36,15 @@ int find_substr(const string &haystack, const string &needle)
 {
     size_t pos = haystack.find(needle);
     return (pos == string::npos) ? -1 : static_cast<int>(pos);
+}
+
+void tolower_str(string &str)
+{
+    for (char &c : str)
+    {
+        c = tolower(c);
+    }
+    return;
 }
 
 void grep_arg(const int &argc, const char *const argv[])
@@ -86,17 +96,32 @@ void grep_arg(const int &argc, const char *const argv[])
     // Optiot
     bool line_numbering = options.find('l') != options.end();
     bool occurrences = options.find('o') != options.end();
+    bool reverse = options.find('r') != options.end();
+    bool ignore_case = options.find('i') != options.end();
 
     string filename = argv[argc == 3 ? 2 : 3];
-    string needle = argv[argc == 3 ? 1 : 2];
+    string needle = argv[argc == 3 ? 1 : 2]; // Merkkijono jota haetaan.
+    // Hakuun käytettävä needle-muuttuja.
+    // Säilytetään alkuperäinen alkuperäisessä kunnossa esim. ignore-case-tapauksessa.
+    string needle_srch = needle;
     vector<string> haystack = read_textfile(filename);
+
+    if (ignore_case)
+        tolower_str(needle_srch);
 
     int lines_found = 0;
 
     // Käydään joka rivi läpi tiedostosta.
     for (int i = 0; i < haystack.size(); i++)
     {
-        if (find_substr(haystack[i], needle) >= 0)
+        // Jos, ignore-case, niin muokataan tätä pieneksi.
+        // Säilytetään alkupreäinen teksti haystack-muuttujassa.
+        string haystack_line = haystack[i];
+        if (ignore_case)
+            tolower_str(haystack_line);
+
+        if (!reverse && find_substr(haystack_line, needle_srch) >= 0 ||
+            reverse && find_substr(haystack_line, needle_srch) == -1)
         {
             lines_found++;
             if (line_numbering)
@@ -108,7 +133,12 @@ void grep_arg(const int &argc, const char *const argv[])
     }
     if (occurrences)
     {
-        io::cout << "\nOccurrences of lines containing \"" << needle << "\": " << lines_found;
+        if (reverse)
+            io::cout << "\nOccurrences of lines NOT containing \"" << needle << "\""
+                     << (ignore_case ? " case ignored" : "") << ": " << lines_found;
+        else
+            io::cout << "\nOccurrences of lines containing \"" << needle << "\""
+                     << (ignore_case ? " case ignored" : "") << ": " << lines_found;
     }
 
     return;

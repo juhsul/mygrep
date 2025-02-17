@@ -24,6 +24,13 @@ vector<string> read_textfile(const string &filename);
 int find_substr(const string &haystack, const string &needle);
 
 /**
+ * @brief Muuttaa merkkijonon kaikki kirjaimet pieniksi kirjaimiksi.
+ *
+ * @param str Muutettava merkkijono.
+ */
+void tolower_str(string &str);
+
+/**
  * @brief Tulostaa löydetyt rivit annettujen tietojen avulla.
  *
  * @param argc Komentoriviargumenttien määrä.
