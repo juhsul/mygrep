@@ -38,12 +38,45 @@ int find_substr(const string &haystack, const string &needle)
     return (pos == string::npos) ? -1 : static_cast<int>(pos);
 }
 
+bool is_2byte_char(const unsigned char &c)
+{
+    if (c >= 0xC0)
+        return true;
+    else
+        return false;
+}
+
 void tolower_str(string &str)
 {
-    for (char &c : str)
+    // Määritellään merkkijono, johon tallennetaan pieniksi kirjaimiksi muutettu merkkijono
+    string lower;
+    // Käydään läpi jokainen merkkijonon indeksi
+    for (size_t i = 0; i < str.size(); i++)
     {
-        c = tolower(c);
+        // Jos on ääkkönen muutetaan manuaalisesti kirjaimet pieniksi
+        if (is_2byte_char(str[i]))
+        {
+            if (str.substr(i, 2) == "Ä")
+                lower += "ä";
+
+            else if (str.substr(i, 2) == "Ö")
+                lower += "ö";
+
+            else if (str.substr(i, 2) == "Å")
+                lower += "å";
+
+            // Jos on ääkkönen, mutta on valmiiksi pieni
+            else
+                lower += str.substr(i, 2);
+
+            // Lisätään ylimääräinen indeksiluku, koska ääkköset vievät kaksi merkkipaikkaa
+            i++;
+        }
+        // Normaalit kirjaimet muutetaan normaalisti
+        else
+            lower += tolower(str[i]);
     }
+    str = lower; // Muutetaan alkuperäinen merkkijono muutetuksi.
     return;
 }
 

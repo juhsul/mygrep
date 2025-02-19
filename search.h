@@ -24,6 +24,15 @@ vector<string> read_textfile(const string &filename);
 int find_substr(const string &haystack, const string &needle);
 
 /**
+ * @brief Tarkastaako onko kyseessä oleva kirjain ääkkönen.
+ *
+ * @param c Kyseessä oleva kirjain.
+ * @return true Jos on ääkkönen.
+ * @return false Jos ei ole.
+ */
+bool is_2byte_char(const unsigned char &c);
+
+/**
  * @brief Muuttaa merkkijonon kaikki kirjaimet pieniksi kirjaimiksi.
  *
  * @param str Muutettava merkkijono.
